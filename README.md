@@ -4,4 +4,3 @@ Repository di Programmazione-Web-Mobile dove sono presenti tutti le lezioni ed e
 
 > [!NOTE]
 > Gli esercizi potranno non essere identici a come li a implementati il prof.
-
