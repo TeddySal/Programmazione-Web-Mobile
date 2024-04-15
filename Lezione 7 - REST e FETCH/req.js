@@ -17,11 +17,13 @@ function requestFilm(id) {
             document.getElementById('director').innerHTML = json.director;
             document.getElementById('opening').innerHTML = json.opening_crawl;
             document.getElementById('date').innerHTML = json.created;
+            
 
             for (let i = 0; i < json.characters.length; i++) {
                 fetch(json.characters[i])
                     .then((res) => res.json())
                     .then((person) => {
+                        console.log(person);
                         var car = document.getElementById('car-none');
                         var clone = car.cloneNode(true);
                         clone.id = "car";
@@ -50,4 +52,17 @@ function requestFilm(id) {
         }
     );
     isChanged = true;
+}
+
+function cardOn() {
+    //alert('cardOn() function');
+    document.getElementById('card-p').classList.remove('d-none');
+}
+
+function off() {
+    document.getElementById("overlay").classList.add('d-none');
+}
+
+function on() {
+    document.getElementById("overlay").classList.remove('d-none');
 }
