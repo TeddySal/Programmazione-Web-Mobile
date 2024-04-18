@@ -7,47 +7,55 @@
     <title>Popolari</title>
 </head>
 <body>
+    <nav class="navbar" style="background-color: #0d253f;">
+        <div class="container-md">
+          <a class="navbar-brand" href="index.html"><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="The Movie Database (TMDB)" width="154" height="20">
+          </a>
+        </div>
+      </nav>
     <div class="container">
-        <div class="row row-cols-4">
-            <div id="card-film" class="col d-none">
-                <div class="card " style="width: 250px; margin-top: 20px; margin-bottom: 20px;">
+        <div class="row g-3 mt-4">
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" onchange="getPopolari(value)">
+                    <option selected>Scegli la lingua</option>
+                    <option value="it-IT">it-IT</option>
+                    <option value="en-EN">en-EN</option>
+                    <option value="fr-FR">fr-FR</option>
+                    <option value="zh-ZH">zh-ZH</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" placeholder="Cambia pagina" onchange="getPopolari()">
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="card-film-none" class="col-4 d-none">
+                <div class="card" style="width: 400px; margin-top: 20px; margin-bottom: 20px;">
                     <img src="..." alt="..." class="card-img-top">
                     <div class="card-body">
                         <h5 id="title" class="card-title"></h5>
                         <div style="overflow: scroll; height: 200px;">
                             <p id="overview" class="card-text"></p>
                         </div>
+                    </div>
+                    <div class="card-footer">
                         <a href="#" class="btn btn-primary">Dettagli</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="popolari.js"></script>
+    <script src="lib.js"></script>
     <script>
-        const image_base = 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2';
-        let card = document.getElementById('card-film');
-
-        for (let i = 0; i < popolari.results.length; i++) {
-            let movie = popolari.results[i];
-            let clone = card.cloneNode(true);
-
-            let title = clone.getElementsByClassName('card-title')[0];
-            let overview = clone.getElementsByClassName('card-text')[0];
-            let image = clone.getElementsByClassName('card-img-top')[0];
-            let button = clone.getElementsByClassName('btn-primary')[0];
-            
-
-            title.innerHTML = movie.title;
-            overview.innerHTML = movie.overview;
-            image.src = image_base + movie.poster_path;
-            button.href = "scheda-film.html?id="+movie.id;
-            
-            clone.classList.remove('d-none');
-            card.after(clone);
+        function getPopolari(lang) {
+            fetch('https://api.themoviedb.org/3/movie/popular?api_key='+api_key+'&language='+lang+'&page=1', {method: "GET"})
+                .then(response => response.json())
+                .then(json => mostraPopolari(json, lang))
+                .catch(err => console.error(err));
         }
-        
-        
+
+        getPopolari("it_IT");
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
