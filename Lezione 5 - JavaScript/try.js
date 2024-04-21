@@ -13,3 +13,8 @@ for (let i = 0; i < popolari.results.length; i++) {
     clone.classList.remove('d-none');
     card.after(clone);
 }
+
+popolari = {
+    name: "Ilyas",
+    surname: "Kerkeni"
+};

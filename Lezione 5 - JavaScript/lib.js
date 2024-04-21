@@ -2,6 +2,9 @@ const api_key = "36dba93f23a489bf98f4acace99b83ae";
 const image_base = 'https://media.themoviedb.org/t/p/w300_and_h450_bestv2';
 var isChanged = false;
 
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
 function mostraPopolari(films, lang) {
     //document.getElementById('card-film-none').classList.remove('d-none');
     
@@ -30,7 +33,7 @@ function mostraPopolari(films, lang) {
 
 function mostraSchedaFilm(film) {
     console.log(film);
-    let bg_image = 'https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces' + film.backdrop_path;
+    //let bg_image = 'https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces' + film.backdrop_path;
     //document.getElementById('poster').style.backgroundImage = "url("+bg_image+")";
     //document.getElementById('poster').style.backgroundPosition = "left calc((50vw - 170px) - 340px) top";
     document.getElementById('title').innerHTML = film.title + " " + '('+film.release_date.split('-')[0]+')';
@@ -98,8 +101,74 @@ function mostraFilmAttore(films) {
     
 }
 
+function setupLangOptions() {
+    fetch(`https://api.themoviedb.org/3/configuration/languages?api_key=${api_key}`, {method: 'GET'})
+        .then(response => response.json())
+        .then(json => {
+            //console.log(json);
+            json.sort();
+            
+            for (let i = 0; i < json.length; i++) {
+                if (json[i].name != "") {
+                    let clone = document.getElementById('lang').cloneNode(true);
+                clone.value = json[i].iso_639_1 + '-' + json[i].iso_639_1.toUpperCase();
+                clone.innerHTML = json[i].name;
+                //console.log(clone);
+                //console.log(json[i].name);
+                document.getElementById('lang').after(clone);
+                }
+
+            }
+            
+        })
+    }
+
 function findGender(gender) {
-    if (gender == 0)    return "Non specificato";
-    else if (gender == 1)    return "Femmina";
+    if      (gender == 0)   return "Non specificato";
+    else if (gender == 1)   return "Femmina";
     else if (gender == 2)   return "Maschio";
+}
+
+function searchFilm(val) {
+    console.log(val);
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${val}`, {method: "GET"})
+        .then(response => response.json())
+        .then(json => mostraPopolari(json))
+        .catch(err => console.log(err));
+}
+
+function mostraAttoriPopolari(persone) {
+    //console.log(persone);
+    if (persone.results.length == 0) getAttoriPopolari();
+    document.querySelectorAll('[id=card-actor]').forEach((element) => element.remove());
+    for (let i = 0; i < persone.results.length; i++) {
+        //console.log(persone.results[i].name);
+        let clone = document.getElementById('card-act').cloneNode(true);
+
+        clone.getElementsByClassName('card-img-top')[0].src = 'https://media.themoviedb.org/t/p/w235_and_h235_face/' + persone.results[i].profile_path;
+        clone.getElementsByClassName('text-decoration-none')[0].href = `scheda-attore.html?id=${persone.results[i].id}`;
+        clone.getElementsByClassName('card-title')[0].innerHTML = persone.results[i].name;
+        
+        let over = "";
+        for (let j = 0; j < persone.results[i].known_for.length; j++) {
+            if (j != 2) {
+                if (persone.results[i].known_for[j].media_type == 'movie')
+                    over = over + persone.results[i].known_for[j].title + ', ';
+                else
+                    over = over + persone.results[i].known_for[j].name + ', ';
+            } else {
+                if (persone.results[i].known_for[j].media_type == 'movie')
+                    over = over + persone.results[i].known_for[j].title;
+                else
+                    over = over + persone.results[i].known_for[j].name;
+            }
+        }
+
+        clone.getElementsByClassName('card-text')[0].innerHTML = over;
+
+        clone.classList.remove('d-none');
+        clone.id = 'card-actor';
+
+        document.getElementById('card-act').before(clone);
+    }
 }
