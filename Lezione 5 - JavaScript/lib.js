@@ -5,12 +5,14 @@ var isChanged = false;
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
-function mostraPopolari(films, lang) {
+function mostraPopolari(films, lang, type) {
+    console.log(films);
     //document.getElementById('card-film-none').classList.remove('d-none');
+    if (films.results.length == 0) getPopolari();
     
-    if (isChanged) {
+    //if (isChanged) {
         document.querySelectorAll('[id=card]').forEach((element) => element.remove());
-    }
+    //}
 
     let card = document.getElementById('card-film-none');
 
@@ -18,11 +20,13 @@ function mostraPopolari(films, lang) {
         let movie = films.results[i];
         let clone = card.cloneNode(true);
         clone.id = 'card';
+        if (type == 'film') clone.getElementsByClassName('card-title')[0].innerHTML = movie.title;
+        else                clone.getElementsByClassName('card-title')[0].innerHTML = movie.name;
 
-        clone.getElementsByClassName('card-title')[0].innerHTML = movie.title;
         clone.getElementsByClassName('card-text')[0].innerHTML = movie.overview;
         clone.getElementsByClassName('card-img-top')[0].src = image_base + movie.poster_path;
-        clone.getElementsByClassName('btn-primary')[0].href = "scheda-film.html?id="+movie.id+"&language="+lang;
+        if (type == 'film') clone.getElementsByClassName('btn-primary')[0].href = "scheda-film.html?id="+movie.id+"&language="+lang;
+        else                clone.getElementsByClassName('btn-primary')[0].href = "scheda-tv.html?id="+movie.id+"&language="+lang;
         
         clone.classList.remove('d-none');
         card.before(clone);
@@ -31,12 +35,13 @@ function mostraPopolari(films, lang) {
     isChanged = true;
 }
 
-function mostraSchedaFilm(film) {
+function mostraSchedaFilm(film, type) {
     console.log(film);
-    //let bg_image = 'https://media.themoviedb.org/t/p/w1920_and_h800_multi_faces' + film.backdrop_path;
-    //document.getElementById('poster').style.backgroundImage = "url("+bg_image+")";
-    //document.getElementById('poster').style.backgroundPosition = "left calc((50vw - 170px) - 340px) top";
-    document.getElementById('title').innerHTML = film.title + " " + '('+film.release_date.split('-')[0]+')';
+
+    if (type == 'film') document.getElementById('title').innerHTML = film.title + " " + '('+film.release_date.split('-')[0]+')';
+    else                document.getElementById('title').innerHTML = film.name + " " + '('+film.first_air_date.split('-')[0]+')';
+
+    
     for (let i = 0; i < film.genres.length; i++) {
         document.getElementById('genres').innerHTML = document.getElementById('genres').innerHTML + film.genres[i].name + ', ';
     }
@@ -48,8 +53,9 @@ function mostraSchedaFilm(film) {
 }
 
 function mostraAttori(attori) {
+    console.log(attori);
     let p = document.getElementById('person');
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < attori.cast.length; i++) {
         let clone = p.cloneNode(true);
         clone.getElementsByClassName('card-img-top')[0].src = image_base + attori.cast[i].profile_path;
         clone.getElementsByClassName('card-text')[0].innerHTML = attori.cast[i].name;
@@ -60,8 +66,6 @@ function mostraAttori(attori) {
 
         p.before(clone);
     }
-    
-    console.log(attori);
 }
 
 function mostraSchedaAttore(attore) {
@@ -84,15 +88,22 @@ function mostraSchedaAttore(attore) {
 function mostraFilmAttore(films) {
     console.log(films);
     let act = document.getElementById('act-film-card');
-    films.cast.sort((a, b) => b.popularity - a.popularity);
 
-    for (let i = 0; i < 5; i++) {
+    films.cast.sort((a, b) => b.vote_average - a.vote_average);
+
+    for (let i = 0; i < 10; i++) {
         let clone = act.cloneNode(true);
+
+        if (films.cast[i].media_type == 'movie') {
+            clone.getElementsByClassName('film-title')[0].innerHTML = films.cast[i].title;
+        } else {
+            clone.getElementsByClassName('film-title')[0].innerHTML = films.cast[i].name;
+        }
         
         clone.getElementsByClassName('card-img-top')[0].src = image_base + films.cast[i].poster_path;
-        clone.getElementsByClassName('film-title')[0].innerHTML = films.cast[i].title;
+        
 
-        console.log(films.cast[i].title);
+        //console.log(films.cast[i].title);
 
         clone.classList.remove('d-none');
 

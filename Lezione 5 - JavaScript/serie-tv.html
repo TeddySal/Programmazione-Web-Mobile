@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Popolari</title>
+    <style>
+        .nav-link {
+          color: white;
+        }
+      </style>
+    
+</head>
+<body onload="setupLangOptions();">
+    <nav class="navbar navbar-expand-lg" style="background-color: #0d253f;">
+        <div class="container-md">
+          <a class="navbar-brand" href="index.html">
+            <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="The Movie Database (TMDB)" width="154" height="20">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">Film</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Serie TV</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="persone.html">Persone</a>
+              </li>
+            </ul>
+            <div class="dropdown"  style="margin-right: 20px;">
+                <button class="btn btn-secondary btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Lingue</button>
+                <div class="row dropdown-menu">
+                    <div class="col">
+                        <h5>Lingue</h5>
+                        <select class="form-select" aria-label="Default select example" onchange="getPopolari(this.value);">
+                            <option id="lang" value="it-IT"></option>
+                        </select>
+                    </div>
+                </div>
+              </div>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" id="val" oninput="searchFilm(this.value);" />
+              <button class="btn btn-success" type="submit" onclick="searchFilm(document.getElementById('val').value);">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+    <div class="container-md">
+      <h3 class="mb-3 fw-semibold lh-1" style="font-size: 3rem; margin-top: 20px;">Serie TV popolari</h3>
+        <div class="row">
+            <div id="card-film-none" class="col-sm-4 d-none">
+                <div class="card" style=" margin-top: 20px; margin-bottom: 20px;">
+                    <img src="..." alt="..." class="card-img-top">
+                    <div class="card-body">
+                        <h5 id="title" class="card-title"></h5>
+                        <div style="overflow: scroll; height: 200px;">
+                            <p id="overview" class="card-text"></p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Dettagli</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="lib.js"></script>
+    <script>
+        getSeriePopolari('it-IT');
+        function getSeriePopolari(lang) {
+            fetch(`https://api.themoviedb.org/3/tv/top_rated?api_key=${api_key}&language=${lang}`, {method: 'GET'})
+                .then(response => response.json())
+                .then(json => mostraPopolari(json, lang, "tv"))
+                .catch(err => console.log(err));
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

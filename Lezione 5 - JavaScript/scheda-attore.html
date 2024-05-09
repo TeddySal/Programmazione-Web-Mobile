@@ -11,7 +11,7 @@
       }
     </style>
 </head>
-<body>
+<body onload="setupLangOptions();">
   <nav class="navbar navbar-expand-lg" style="background-color: #0d253f;">
     <div class="container-md">
       <a class="navbar-brand" href="index.html">
@@ -26,23 +26,34 @@
             <a class="nav-link" aria-current="page" href="#">Film</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Serie TV</a>
+            <a class="nav-link" href="serie-tv.html">Serie TV</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Persone</a>
+            <a class="nav-link" href="persone.html">Persone</a>
           </li>
         </ul>
+        <div class="dropdown"  style="margin-right: 20px;">
+            <button class="btn btn-secondary btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Lingue</button>
+            <div class="row dropdown-menu">
+                <div class="col">
+                    <h5>Lingue</h5>
+                    <select class="form-select" aria-label="Default select example" onchange="getPopolari(this.value);">
+                        <option id="lang" value="it-IT"></option>
+                    </select>
+                </div>
+            </div>
+          </div>
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" id="val" oninput="searchFilm(this.value);" />
+          <button class="btn btn-outline-success" type="submit" onclick="searchFilm(document.getElementById('val').value);">Search</button>
         </form>
       </div>
     </div>
-  </nav>
+</nav>
     <div class="container mt-5">
       <div class="row">
         <div class="col-md-4 col-xl-3">
-          <img id="image" src="" class="img-fluid rounded-start" alt="" style="border-radius: 10px;">
+          <img id="image" src="" class="img-fluid rounded-start shadow-lg" alt="" style="border-radius: 10px;">
           <h5 class="mt-5">Informazioni personali</h5>
           <h6>Conosciuto per</h6>
           <p class="card-text"><small class="text-body-secondary" id="known"></small></p>
@@ -59,10 +70,10 @@
             <h5>Biografia</h5>
             <p id="over" class="card-text"></p>
             <h5 class="h5 mt-4">Conosciuto per</h5>
-            <div class="row mt-3">
+            <div class="row mt-3 d-flex flex-row flex-nowrap overflow-auto">
               <div class="col d-none" id="act-film-card">
                 <div class="card " style="width: 140px; --bs-card-border-color: 0px;">
-                  <img src="..." class="card-img-top" alt="..." style="border-radius: 10px;">
+                  <img src="www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg" class="card-img-top shadow-sm" alt="..." style="border-radius: 10px;">
                   <div class="card-body text-center">
                     <p class="card-text film-title"></p>
                   </div>
@@ -84,7 +95,7 @@
           .then(json => mostraSchedaAttore(json))
           .catch(err => console.log(err));
         
-        fetch('https://api.themoviedb.org/3/person/'+id+'/movie_credits?api_key='+api_key+'&language='+lang, {method:'GET'})
+        fetch('https://api.themoviedb.org/3/person/'+id+'/combined_credits?api_key='+api_key+'&language='+lang, {method:'GET'})
           .then(response => response.json())
           .then(json => mostraFilmAttore(json))
           .catch(err => console.log(err));
