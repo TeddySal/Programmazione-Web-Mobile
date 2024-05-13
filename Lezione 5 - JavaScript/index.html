@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>Popolari</title>
     <style>
         .cl-white {
@@ -29,12 +29,7 @@
           text-decoration: none;
           color: black;
         }
-
-        .fas {
-          background-image: url('https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-28-search-blue-177462d06db81ff2a02aa022c1c0be5ba4200d7bd3f51091ed9298980e3a26a1.svg');
-          background: no-repeat;
-        }
-      </style>
+    </style>
 </head>
 <body onload="setupLangOptions();getPopolari('it_IT');">
   <header>
@@ -63,15 +58,17 @@
               <div class="row dropdown-menu">
                   <div class="col">
                       <h5>Lingue</h5>
-                      <select class="form-select" aria-label="Default select example" onchange="getPopolari(this.value);">
+                      <select class="form-select" aria-label="Default select example" onchange="searchFilm(this.value)">
                           <option id="lang" value="it-IT"></option>
                       </select>
                   </div>
               </div>
             </div>
           <form class="d-flex" role="search">
-            <a href="#" onclick="document.getElementById('hide').classList.remove('d-none');">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="30px" height="30px" style="filter: invert(56%) sepia(56%) saturate(5660%) hue-rotate(164deg) brightness(99%) contrast(101%);;"><path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"/></svg>
+            <a href="#" onclick="toggleSearchBar();">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style="color: #0dcaf0;">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+              </svg>
             </a>
           </form>
         </div>
@@ -83,8 +80,12 @@
         <div class="form-outline">
           <input type="search" id="form1" class="form-control" placeholder="Search" aria-label="Search" style="border-radius: 0px; border: 0; transition: none;" oninput="searchFilm(this.value)"/>
         </div>
-        <ul class="list-group d-none" style="border-radius: 0px;">
-          <li class="list-group-item""><p></p></li>
+        <ul class="list-group" style="border-radius: 0px;">
+          <li id="list-none" class="list-group-item d-none" style="height: 4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg><p class="text-secondary"></p>
+          </li>
         </ul>
       </div>
     </div>
@@ -135,6 +136,40 @@
                 .then(json => mostraPopolari(json, lang, "film"))
                 .catch(err => console.error(err));
         }
+
+        function searchFilm(val) {
+          console.log(val);
+          fetch(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${val}`, {method: "GET"})
+              .then(response => response.json())
+              .then(json => {
+                  console.log(json);
+
+                  document.querySelectorAll("[id=list]").forEach((element) => element.remove());
+
+                  let list = document.getElementById('list-none');
+                  for (let i = 0; i < 6; i++) {
+                    let clone = list.cloneNode(true);
+
+                    clone.id = "list";
+
+                    clone.getElementsByClassName('text-secondary')[0].innerHTML = json.results[i].title;
+
+                    clone.classList.remove('d-none');
+
+                    list.before(clone);
+                  }
+              })
+              .catch(err => console.log(err));
+        }
+
+        function toggleSearchBar() {
+          if (document.getElementById('hide').classList.value.length === 0) {
+            document.getElementById('hide').classList.add('d-none');
+          } else {
+            document.getElementById('hide').classList.remove('d-none');
+          }
+        }
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

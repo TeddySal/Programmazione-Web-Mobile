@@ -140,13 +140,7 @@ function findGender(gender) {
     else if (gender == 2)   return "Maschio";
 }
 
-function searchFilm(val) {
-    console.log(val);
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${val}`, {method: "GET"})
-        .then(response => response.json())
-        .then(json => mostraPopolari(json))
-        .catch(err => console.log(err));
-}
+
 
 function mostraAttoriPopolari(persone) {
     //console.log(persone);
