@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Repository di Programmazione-Web-Mobile dove sono presenti tutti le lezioni ed esercizi.",
   "main": "node.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.19.2"
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.6.2"
   }
 }

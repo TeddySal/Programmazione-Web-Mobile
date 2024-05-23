@@ -11,7 +11,8 @@
       }
     </style>
 </head>
-<body onload="setupLangOptions();">
+<body onload="setupLangOptions();lookForAccount();">
+  <!--
   <nav class="navbar navbar-expand-lg" style="background-color: #0d253f;">
     <div class="container-md">
       <a class="navbar-brand" href="index.html">
@@ -50,6 +51,8 @@
       </div>
     </div>
 </nav>
+  -->
+  <main-header></main-header>
     <div class="container mt-5">
       <div class="row">
         <div class="col-md-4 col-xl-3">
@@ -84,7 +87,8 @@
         </div>
       </div>
     </div>
-    <script src="lib.js"></script>
+    <script src="js/lib.js"></script>
+    <script src="js/main-header.js"></script>
     <script>
         let param = new URLSearchParams(window.location.search);
         let id = param.get('id');

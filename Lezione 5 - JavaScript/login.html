@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+        }
+
+        .pollo:hover img{
+            opacity: 0.2;
+        }
+
+        .pollo:hover .middle {
+            opacity: 1;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <section class="vh-100" style="background-color: #0d253f;">
+        <div class="container py-5 h-100">
+          <div class="d-flex justify-content-center align-items-center h-100">
+              <div class="card d-flex align-items-center" style="border-radius: 1rem; width: 460px;"> 
+                <div class="card-body p-4 p-lg-5 text-black" style="width: 450px;">
+                    <form>
+    
+                      <div class="d-flex align-items-center mb-3 pb-1">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/1280px-Tmdb.new.logo.svg.png" alt="" width="30px" style="border-radius: 0px; margin: 10px;">
+                        <span class="h1 fw-bold mb-0">TMDB</span>
+                      </div>
+    
+                      <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Accedi al tuo account</h5>
+    
+                      <div data-mdb-input-init class="form-outline mb-4">
+                        <input type="email" id="email" class="form-control form-control-lg" />
+                        <label class="form-label" for="form2Example17">Email address</label>
+                      </div>
+    
+                      <div data-mdb-input-init class="form-outline mb-4">
+                        <input type="password" id="password" class="form-control form-control-lg" />
+                        <label class="form-label" for="form2Example27">Password</label>
+                      </div>
+    
+                      <div class="pt-1 mb-4">
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="button" onclick="login()">Login</button>
+                      </div>
+    
+                      <a class="small text-muted" href="#!">Password dimenticata?</a>
+                      <p class="mb-5 pb-lg-2" style="color: #393f81;">Non hai un account? <a href="#!"
+                          style="color: #393f81;">Registrati qui</a></p>
+                      <a href="#!" class="small text-muted">Terms of use.</a>
+                      <a href="#!" class="small text-muted">Privacy policy</a>
+                    </form>
+                </div>
+              </div>
+          </div>
+        </div>
+      </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        function login() {
+          const options = {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: document.getElementById('email').value, 
+              password: document.getElementById('password').value
+            })
+          };
+
+          fetch('http://localhost:3000/login', options)
+            .then((res) => res.json())
+            .then((res) => {
+              localStorage.setItem('user_id', res.id);
+              window.location = "index.html";
+            })
+            .catch((err) => console.error(err));
+        }
+    </script>
+
+</body>
+</html>
